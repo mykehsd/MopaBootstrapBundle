@@ -10,7 +10,7 @@ class DoctrineCrudCommand extends BaseGenerator
     protected function configure()
     {
         parent::configure();
-        $this->setName('mopa:generate:crud');
+        $this->setName('mopa:bootstrap:generate:crud');
     }
 
     protected function getGenerator()

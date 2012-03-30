@@ -1,0 +1,6 @@
+services:
+    twig.extension.mopa_bootstrap:
+        class: Mopa\Bundle\BootstrapBundle\Twig\Extension\GlobalsExtension
+        arguments: [ %mopa_bootstrap.globals% ]
+        tags:
+            -  { name: twig.extension }

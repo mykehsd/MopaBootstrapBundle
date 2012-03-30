@@ -1,5 +1,4 @@
 <?php
-
 namespace Mopa\Bundle\BootstrapBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,9 +22,20 @@ class MopaBootstrapExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $yamlloader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $yamlloader->load("form_extensions.yml");
+
+        if(isset($config['twig'])){
+            $yamlloader->load("twig_extensions.yml");
+            $globals = array(
+                'layoutTemplate' => $config['twig']['layoutTemplate']
+            );
+            $container->setParameter(
+                'mopa_bootstrap.globals',
+                $globals
+            );
+        }
 
         if(isset($config['form'])){
+            $yamlloader->load("form_extensions.yml");
             if(isset($config['form']['render_fieldset'])){
                 $container->setParameter(
                     'mopa_bootstrap.form.render_fieldset',
@@ -50,9 +60,10 @@ class MopaBootstrapExtension extends Extension
                     $config['form']['error_type']
                 );
             }
+
         }
+
         if(isset($config['navbar'])){
-            $xmlloader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
             $yamlloader->load("navbar_extension.yml");
             if(isset($config['navbar']['template'])){
                 $container->setParameter(
@@ -61,11 +72,5 @@ class MopaBootstrapExtension extends Extension
                 );
             }
         }
-    }
-    protected function loadExamples(ContainerBuilder $container){
-        //$xmlloader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/examples'));
-        $yamlloader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/examples'));
-        $yamlloader->load("example_menu.yml");
-        $yamlloader->load("example_navbar.yml");
     }
 }
